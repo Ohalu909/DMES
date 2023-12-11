@@ -1,5 +1,5 @@
 from experta import *
-# from collections.abc import Counter
+from collections import Counter
 import random
 import linecache
 from database import Database
@@ -167,7 +167,7 @@ class DMES(KnowledgeEngine):
         print('-----Diabetic Monitoring Expert System-----')
 
     @Rule(Fact(reading=MATCH.reading))
-    def process_action(self, reading):
+    def reading_type(self, reading):
         if reading < 3.9:
             self.declare(Fact(reading_type="rendah"))
             self.bgl_reading.append('Bacaan gula anda RENDAH')
@@ -201,30 +201,30 @@ class DMES(KnowledgeEngine):
     @Rule(Action('count_serving_type'))
     def count_serving_type(self):
         print("-------------------------------")
-        # counter = Counter(self.serving_type_list)
+        counter = Counter(self.serving_type_list)
         print("Serving type occurrence counts:")
-        # for serving_type, count in counter.items():
-        #     print(f"{serving_type}: {count}")
-        count_dict = {}
+        for serving_type, count in counter.items():
+            print(f"{serving_type}: {count}")
 
-        for item in self.serving_type_list:
-            if item in count_dict:
-                count_dict[item] += 1
-            else:
-                count_dict[item] = 1
-        for item, count in count_dict.items():
-            print(f'{item}: {count}')
-        self.declare(Action('check_kkm_recommendation'))
+        # count_dict = {}
+        # for item in self.serving_type_list:
+        #     if item in count_dict:
+        #         count_dict[item] += 1
+        #     else:
+        #         count_dict[item] = 1
+        # for item, count in count_dict.items():
+        #     print(f'{item}: {count}')
+        # self.declare(Action('check_kkm_recommendation'))
 
     @Rule(Action('check_kkm_recommendation'))
     def check_kkm_recommendation(self):
         kkm_recommendation = ['karbohidrat', 'protein', 'serat', 'serat']
 
-        # counter_list1 = Counter(kkm_recommendation)
-        # counter_list2 = Counter(self.serving_type_list)
+        counter_list1 = Counter(kkm_recommendation)
+        counter_list2 = Counter(self.serving_type_list)
 
-        counter_list1 = len(kkm_recommendation)
-        counter_list2 = len(self.serving_type_list)
+        # counter_list1 = len(kkm_recommendation)
+        # counter_list2 = len(self.serving_type_list)
 
         print("-------------------------------\nKKM recommendation checker:")
 
@@ -266,23 +266,23 @@ class DMES(KnowledgeEngine):
         print('-----------------------------------------')
         kkm_recommendation = ['karbohidrat', 'protein', 'serat', 'serat', 'minuman tanpa gula']
 
-        # counter_list1 = Counter(kkm_recommendation)
-        # counter_list2 = Counter(self.serving_type_list)
+        counter_list1 = Counter(kkm_recommendation)
+        counter_list2 = Counter(self.serving_type_list)
 
-        counter_list1 = {}
-        counter_list2 = {}
+        # counter_list1 = {}
+        # counter_list2 = {}
 
-        for item in kkm_recommendation:
-            if item in counter_list1:
-                counter_list1[item] += 1
-            else:
-                counter_list1[item] = 1
+        # for item in kkm_recommendation:
+        #     if item in counter_list1:
+        #         counter_list1[item] += 1
+        #     else:
+        #         counter_list1[item] = 1
 
-        for item in self.serving_type_list:
-            if item in counter_list2:
-                counter_list2[item] += 1
-            else:
-                counter_list2[item] = 1
+        # for item in self.serving_type_list:
+        #     if item in counter_list2:
+        #         counter_list2[item] += 1
+        #     else:
+        #         counter_list2[item] = 1
 
         for item, count2 in counter_list2.items():
             count1 = counter_list1[item]
@@ -364,11 +364,11 @@ class DMES(KnowledgeEngine):
         self.reasoning.append(reason)
         print(reason)
 
-# engine = DMES()
-# engine.reset()
-#
-# # print(engine.agenda)
-# engine.run()
+engine = DMES()
+engine.reset()
+
+# print(engine.agenda)
+engine.run()
 # #
 # print("-----KB-----")
 # print(engine.facts)

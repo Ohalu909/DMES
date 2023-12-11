@@ -19,7 +19,7 @@ ScreenManager:
     MDLabel: 
         text: 'Diabetes Monitoring Expert System'
         font_style: "H6"
-        pos_hint: {'center_x':0.6, 'center_y':0.8}
+        pos_hint: {'center_x':0.6, 'center_y':0.75}
     MDRaisedButton:
         text: 'Log Masuk'
         size_hint: (0.6, 0.05)
@@ -34,10 +34,11 @@ ScreenManager:
         text: 'Testing'
         size_hint: (0.6, 0.05)
         pos_hint: {'center_x':0.5, 'center_y':0.4}
-        on_press: 
-            on_text_validate: (app.dmes_logic())
-            root.manager.current = 'main'
-            # root.manager.current = 'table'
+        on_press: root.manager.current = 'output'
+    # MDLabel: 
+    #     text: 'Sekiranya anda pesakit diabetes, pastikan anda mempunyai alat cek gula sebelum menggunakan aplikasi ini untuk hasil yang lebih memuaskan.'
+    #     # font_style: "H6"
+    #     pos_hint: {'center_x':0.6, 'center_y':0.3}
     # MDRaisedButton:
     #     text: "Set theme"
     #     size_hint: (0.6, 0.05)
