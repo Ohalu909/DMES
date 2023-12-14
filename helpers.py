@@ -34,7 +34,9 @@ ScreenManager:
         text: 'Testing'
         size_hint: (0.6, 0.05)
         pos_hint: {'center_x':0.5, 'center_y':0.4}
-        on_press: root.manager.current = 'output'
+        on_press: 
+            on_text_validate: (app.dmes_logic())
+            root.manager.current = 'output'
     # MDLabel: 
     #     text: 'Sekiranya anda pesakit diabetes, pastikan anda mempunyai alat cek gula sebelum menggunakan aplikasi ini untuk hasil yang lebih memuaskan.'
     #     # font_style: "H6"

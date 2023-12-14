@@ -3,7 +3,7 @@ from collections import Counter
 import random
 import linecache
 from database import Database
-
+import logging
 
 class Action(Fact):
     pass
@@ -29,6 +29,18 @@ class MealPlan(Fact):
 class DMES(KnowledgeEngine):
     def __init__(self):
         super().__init__()
+
+        # Add the following lines to configure logging
+        logging.basicConfig(level=logging.INFO)
+        logging.getLogger('expert').setLevel(logging.INFO)
+        logging.getLogger('experta.clips').setLevel(logging.INFO)
+        logging.getLogger('experta.defrule').setLevel(logging.INFO)
+
+        print(logging.getLogger('expert').getEffectiveLevel())
+        print(logging.getLogger('experta.clips').getEffectiveLevel())
+        print(logging.getLogger('experta.defrule').getEffectiveLevel())
+
+
         self.my_list = []
         self.serving_type_list = []
         self.bgl_reading = []
@@ -63,6 +75,7 @@ class DMES(KnowledgeEngine):
         yield Menu(menu='mi bandung', menu_class='karbohidrat')
         yield Menu(menu='mi kuah', menu_class='karbohidrat')
         yield Menu(menu='mi kari', menu_class='karbohidrat')
+        yield Menu(menu='mi hailam', menu_class='karbohidrat')
         yield Menu(menu='nasi ayam', menu_class='karbohidrat')
         yield Menu(menu='laksa', menu_class='karbohidrat')
         yield Menu(menu='laksa goreng', menu_class='karbohidrat')
@@ -206,15 +219,7 @@ class DMES(KnowledgeEngine):
         for serving_type, count in counter.items():
             print(f"{serving_type}: {count}")
 
-        # count_dict = {}
-        # for item in self.serving_type_list:
-        #     if item in count_dict:
-        #         count_dict[item] += 1
-        #     else:
-        #         count_dict[item] = 1
-        # for item, count in count_dict.items():
-        #     print(f'{item}: {count}')
-        # self.declare(Action('check_kkm_recommendation'))
+        self.declare(Action('check_kkm_recommendation'))
 
     @Rule(Action('check_kkm_recommendation'))
     def check_kkm_recommendation(self):
@@ -222,9 +227,6 @@ class DMES(KnowledgeEngine):
 
         counter_list1 = Counter(kkm_recommendation)
         counter_list2 = Counter(self.serving_type_list)
-
-        # counter_list1 = len(kkm_recommendation)
-        # counter_list2 = len(self.serving_type_list)
 
         print("-------------------------------\nKKM recommendation checker:")
 
@@ -268,21 +270,6 @@ class DMES(KnowledgeEngine):
 
         counter_list1 = Counter(kkm_recommendation)
         counter_list2 = Counter(self.serving_type_list)
-
-        # counter_list1 = {}
-        # counter_list2 = {}
-
-        # for item in kkm_recommendation:
-        #     if item in counter_list1:
-        #         counter_list1[item] += 1
-        #     else:
-        #         counter_list1[item] = 1
-
-        # for item in self.serving_type_list:
-        #     if item in counter_list2:
-        #         counter_list2[item] += 1
-        #     else:
-        #         counter_list2[item] = 1
 
         for item, count2 in counter_list2.items():
             count1 = counter_list1[item]
