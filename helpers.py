@@ -3,12 +3,17 @@ ScreenManager:
     MenuScreen:
     LoginScreen:
     SignUpScreen:
+    IntroScreen1:
+    IntroScreen2:
+    IntroScreen3:
     MainScreen:
-    TableScreen:
+    CarbScreen:
     ReadingTypeScreen:
     AskBGLScreen:
     AskMealTakenScreen:
     OutputScreen:
+    OutputScreen2:
+    OutputScreen3:
 
 <MenuScreen>:
     name: 'menu'
@@ -30,13 +35,13 @@ ScreenManager:
         size_hint: (0.6, 0.05)
         pos_hint: {'center_x':0.5, 'center_y':0.6}
         on_press: root.manager.current = 'signup'
-    MDRaisedButton:
-        text: 'Testing'
-        size_hint: (0.6, 0.05)
-        pos_hint: {'center_x':0.5, 'center_y':0.4}
-        on_press: 
-            on_text_validate: (app.dmes_logic())
-            root.manager.current = 'output'
+    # MDRaisedButton:
+    #     text: 'Testing'
+    #     size_hint: (0.6, 0.05)
+    #     pos_hint: {'center_x':0.5, 'center_y':0.4}
+    #     on_press: 
+    #         on_text_validate: (app.dmes_logic())
+    #         root.manager.current = 'output'
     # MDLabel: 
     #     text: 'Sekiranya anda pesakit diabetes, pastikan anda mempunyai alat cek gula sebelum menggunakan aplikasi ini untuk hasil yang lebih memuaskan.'
     #     # font_style: "H6"
@@ -131,7 +136,86 @@ ScreenManager:
         pos_hint: {'center_x':0.5, 'center_y':0.2}
         on_press: root.manager.current = 'menu'
 
-        
+<IntroScreen1>
+    name: 'intro1'
+    MDLabel: 
+        text: 'Apa itu Diabetes?'
+        font_style: "H6"
+        pos_hint: {'center_x':0.58, 'center_y':0.85}
+        elevation: 10
+        color: "grey"
+    MDLabel:
+        text: "Diabetes adalah penyakit kronik yang berlaku apabila pankreas tidak menghasilkan insulin yang mencukupi atau apabila tubuh tidak dapat menggunakan insulin dengan berkesan."
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.7}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDLabel:
+        text: "Insulin merupakan hormon yang mengawal glukosa dalam darah."
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDRaisedButton:
+        text: 'Seterusnya'
+        pos_hint: {'center_x':0.5, 'center_y':0.3}
+        on_press: 
+            root.manager.current = 'intro2'
+    MDRectangleFlatButton:
+        text: 'Skip'
+        pos_hint: {'center_x':0.5, 'center_y':0.2}
+        on_press: root.manager.current = 'main'
+
+<IntroScreen2>
+    name: 'intro2'
+    MDLabel: 
+        text: 'Apa itu "Expert System"?'
+        font_style: "H6"
+        pos_hint: {'center_x':0.58, 'center_y':0.85}
+        elevation: 10
+        color: "grey"
+    MDLabel:
+        text: "Sebuah program komputer yang menggunakan teknologi kecerdasan buatan (AI) untuk mensimulasikan penilaian dan perilaku manusia yang memiliki kepakaran dalam suatu bidang tertentu."
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.6}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDRaisedButton:
+        text: 'Seterusnya'
+        pos_hint: {'center_x':0.5, 'center_y':0.3}
+        on_press: 
+            root.manager.current = 'intro3'
+    MDRectangleFlatButton:
+        text: 'Skip'
+        pos_hint: {'center_x':0.5, 'center_y':0.2}
+        on_press: root.manager.current = 'main'
+
+<IntroScreen3>
+    name: 'intro3'
+    MDLabel: 
+        text: 'Apa itu DMES?'
+        font_style: "H6"
+        pos_hint: {'center_x':0.58, 'center_y':0.85}
+        elevation: 10
+        color: "grey"
+    MDLabel:
+        text: 'Singkatan untuk "Diabetic Monitoring Expert System"'
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.7}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDLabel:
+        text: 'Sebuah "Expert system" untuk pesakit diabetes memantau paras gula dalam darah sambil merancang pemakanan harian'
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDRaisedButton:
+        text: 'Seterusnya'
+        pos_hint: {'center_x':0.5, 'center_y':0.3}
+        on_press: 
+            root.manager.current = 'main'
+
 <MainScreen>:
     name: 'main'
     id: main
@@ -189,25 +273,24 @@ ScreenManager:
             on_text_validate: (app.dmes_logic())
             root.manager.current = 'output'
     MDRaisedButton:
-        text: 'Log'
+        text: 'Pertukaran Karbohidrat'
         size_hint: (0.6, 0.05)
         pos_hint: {'center_x':0.5, 'center_y':0.3}
-        on_press: 
-            root.manager.current = 'table'
-            app.show_table_screen()
+        on_press: root.manager.current = 'carb_exchange'
+    # MDRaisedButton:
+    #     text: 'Log'
+    #     size_hint: (0.6, 0.05)
+    #     pos_hint: {'center_x':0.5, 'center_y':0.3}
+    #     on_press: 
+    #         root.manager.current = 'table'
+    #         app.show_table_screen()
     MDRectangleFlatButton:
         text: 'Keluar'
         pos_hint: {'center_x':0.5, 'center_y':0.2}
         on_press: root.manager.current = 'menu'
         
-<TableScreen>:
-    name: 'table'
-    ScrollView:
-        GridLayout:
-            id: table_layout
-            cols: 5  
-            spacing: 5
-            padding: 5
+<CarbScreen>:
+    name: 'carb_exchange'
     MDRectangleFlatButton:
         text: 'Kembali'
         pos_hint: {'center_x':0.5, 'center_y':0.2}
@@ -343,19 +426,82 @@ ScreenManager:
                 text: ""
                 size_hint_y: None
                 pos_hint: {'center_x':0.55, 'center_y':0.55}
-            MDLabel: 
-                id: result_label3
-                text: ""
-                font_style: "Caption"
-                size_hint_y: None
-                pos_hint: {'center_x':0.55, 'center_y':0.2}
+            # MDLabel: 
+            #     id: result_label3
+            #     text: ""
+            #     font_style: "Caption"
+            #     size_hint_y: None
+            #     pos_hint: {'center_x':0.55, 'center_y':0.2}
             MDRaisedButton:
-                text: 'Keluar'
+                text: 'Seterusnya'
                 # size_hint_y: None
                 pos_hint: {'center_x':0.5, 'center_y':0.1}
                 on_press: 
                     app.update_main_card()
-                    root.manager.current = 'main'  
+                    root.manager.current = 'output2'  
                     # output_grid.clear_widgets()
-    
+
+<OutputScreen2>
+    name: 'output2'
+    MDTopAppBar:
+        id: toolbar
+        title: "Nasihat DMES"
+        elevation: 4
+        pos_hint: {'top': 1}
+    MDLabel:
+        text: 'Walaupun anda dibenarkan untuk menikmati makanan dan minuman manis dalam diet seharian, anda perlu ingat bahawa pengambilan utama karbohidrat sepatutnya datang daripada sumber buah, sayur, bijirin, susu rendah lemak dan yogurt.'
+        halign: "center"
+        font_style: "Caption"
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDLabel: 
+        id: result_label3
+        text: ""
+        # font_style: "Caption"
+        halign: "center"
+        size_hint_y: None
+        pos_hint: {'center_x':0.5, 'center_y':0.7}
+    MDRaisedButton:
+        text: 'Seterusnya'
+        pos_hint: {'center_x':0.5, 'center_y':0.3}
+        on_press: 
+            root.manager.current = 'output3'
+    MDRectangleFlatButton:
+        text: 'Kembali'
+        pos_hint: {'center_x':0.5, 'center_y':0.2}
+        on_press: 
+            root.manager.current = 'output'
+
+<OutputScreen3>
+    name: 'output3'
+    MDTopAppBar:
+        id: toolbar
+        title: "Nasihat DMES"
+        elevation: 4
+        pos_hint: {'top': 1}
+    MDLabel:
+        text: 'Suku,Suku,Separuh oleh KKM juga merupakan sebahagian daripada cara mengatur pengambilan kalori.'
+        halign: "center"
+        # font_style: "Caption"
+        pos_hint: {'center_x':0.5, 'center_y':0.7}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDLabel:
+        text: 'Makanan seperti karbohidrat dan protein mengandungi lebih banyak kalori berbanding serat, oleh itu, disarankan untuk mengambil keduanya hanya 1/4 setiap satu dalam sepinggan.'
+        halign: "center"
+        # font_style: "Caption"
+        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDRaisedButton:
+        text: 'Kembali'
+        pos_hint: {'center_x':0.5, 'center_y':0.3}
+        on_press: 
+            root.manager.current = 'output2'
+    MDRectangleFlatButton:
+        text: 'Keluar'
+        pos_hint: {'center_x':0.5, 'center_y':0.2}
+        on_press: 
+            root.manager.current = 'main'
 """

@@ -25,22 +25,24 @@ class Advice(Fact):
 class MealPlan(Fact):
     pass
 
-
+# This KnowledgeEngione class manages the working memory of the expert system
+# It contains the Facts and Rules
+# Rules will use the Facts during the inference process
 class DMES(KnowledgeEngine):
     def __init__(self):
         super().__init__()
 
-        # Add the following lines to configure logging
-        logging.basicConfig(level=logging.INFO)
-        logging.getLogger('expert').setLevel(logging.INFO)
-        logging.getLogger('experta.clips').setLevel(logging.INFO)
-        logging.getLogger('experta.defrule').setLevel(logging.INFO)
+        # To cconfigure logging (INFO, WARNING, ERROR, DEBUG)
+        # logging.basicConfig(level=logging.INFO)
+        # logging.getLogger('expert').setLevel(logging.INFO)
+        # logging.getLogger('experta.clips').setLevel(logging.INFO)
+        # logging.getLogger('experta.defrule').setLevel(logging.INFO)
 
-        print(logging.getLogger('expert').getEffectiveLevel())
-        print(logging.getLogger('experta.clips').getEffectiveLevel())
-        print(logging.getLogger('experta.defrule').getEffectiveLevel())
+        # print(logging.getLogger('expert').getEffectiveLevel())
+        # print(logging.getLogger('experta.clips').getEffectiveLevel())
+        # print(logging.getLogger('experta.defrule').getEffectiveLevel())
 
-
+        # These lists will hold the output for the Rules that will be used in UI implementation
         self.my_list = []
         self.serving_type_list = []
         self.bgl_reading = []
@@ -48,10 +50,12 @@ class DMES(KnowledgeEngine):
         self.meal_recommendation = []
         self.reasoning = []
 
-    @DefFacts()
+    # This is the knowledge base that contains all the Facts
+    @DefFacts() 
     def kb_facts(self):
         yield Fact(action="greet")
 
+        # Menu is a Fact that holds the information about the meal taken and its class in the food pyramid
         yield Menu(menu='q', menu_class='q')
         yield Menu(menu='roti', menu_class='karbohidrat')
         yield Menu(menu='nasi putih', menu_class='karbohidrat')
@@ -160,25 +164,33 @@ class DMES(KnowledgeEngine):
         yield Menu(menu='teh o limau ais', menu_class='minuman bergula')
         yield Menu(menu='milo ais', menu_class='minuman bergula')
 
+    # This is how the Rules are being created
+    # It will have the @Rule tag to specify it as a Rule
+    # We will specify the premises as the arguments for Rule
     @Rule(Fact(action='greet'))
     def ask_reading_type(self):
 
         db = Database()
 
+        # Data about the user from the local database will be retrieved here to be used in the inferencing process
         last_reading_type = db.get_last_entry("reading_type")
         last_bgl_reading = float(db.get_last_entry("bgl_reading"))
         last_meal_taken = db.get_last_entry("meal_taken")
 
+        # The declared data will be declared as Facts to be used in the inferencing process
         self.declare(Fact(type=last_reading_type.lower()))
         self.declare(Fact(reading=last_bgl_reading))
         self.declare(User(meal_taken='q'))
-        value_list = last_meal_taken.split(', ')
+        value_list = last_meal_taken.split(',')
         for i in value_list:
             self.declare(User(meal_taken=i))
             self.my_list.append(i)
 
         print('-----Diabetic Monitoring Expert System-----')
 
+    # This rule check the reading type of the patient's blood glucose level
+    # It is based on the standard bgl reading that is applicable to all diabetic patients
+    # Approved by the Human Expert
     @Rule(Fact(reading=MATCH.reading))
     def reading_type(self, reading):
         if reading < 3.9:
@@ -200,6 +212,8 @@ class DMES(KnowledgeEngine):
         print("Current menu taken list:", self.my_list)
         self.declare(Action('check_serving_type'))
 
+    # This Rule checks the serving type of the meal taken by the user
+    # It will go through the Facts list to find th type of class of the food taken by the user
     @Rule(AS.f1 << Action('check_serving_type'),
           AS.f2 << User(meal_taken=MATCH.mta),
           Menu(menu=MATCH.mta,
@@ -211,6 +225,7 @@ class DMES(KnowledgeEngine):
         else:
             self.serving_type_list.append(mc)
 
+    # This Rule will count the occurence of the type of class to check with the KKM recommendation
     @Rule(Action('count_serving_type'))
     def count_serving_type(self):
         print("-------------------------------")
@@ -233,36 +248,39 @@ class DMES(KnowledgeEngine):
         if counter_list1 == counter_list2:
             print('satisfy kkm recommendation')
             self.declare(Action('satisfy'))
-            self.kkm_checker.append('mengikut cadangan pemakanan KKM')
+            self.kkm_checker.append('Mengikut cadangan pemakanan KKM')
         else:
             print('dissatisfy kkm recommendation')
             self.declare(Action('dissatisfy'))
-            self.kkm_checker.append('tidak mengikut cadangan pemakanan KKM')
+            self.kkm_checker.append('Tidak mengikut cadangan pemakanan KKM')
 
+    # This Rule will check the size of the meal taken base on the bgl reading and and if it satisfy KKM recommendation
     @Rule(Action('satisfy'),
           Fact(reading_type=MATCH.rt))
     def satisfy_recommendation(self, rt):
         if rt == 'rendah':
-            self.declare(Advice('saiz hidangan kecil'))
-            self.declare(Advice('tambahkan saiz hidangan'))
+            self.declare(Advice('Saiz hidangan kecil.'))
+            self.declare(Advice('Tambahkan saiz hidangan.'))
         if rt == 'tinggi':
-            self.declare(Advice('saiz hidangan besar'))
-            self.declare(Advice('kurangkan saiz hidangan'))
+            self.declare(Advice('Saiz hidangan besar.'))
+            self.declare(Advice('Kurangkan saiz hidangan.'))
         if rt == 'normal':
-            self.declare(Advice('saiz hidangan normal'))
-            self.declare(Advice('saiz hidangan memuaskan'))
+            self.declare(Advice('Saiz hidangan normal.'))
+            self.declare(Advice('Saiz hidangan memuaskan.'))
 
+    # This rule will check if the meal taken has enough counts of the food class recommemded by the KKM
     @Rule(Action('dissatisfy'),
           Fact(reading_type=MATCH.rt))
     def dissatisfy_recommendation(self, rt):
         if rt == 'rendah':
-            self.declare(Advice('tidak cukup hidangan'))
+            self.declare(Advice('Tidak cukup hidangan.'))
         if rt == 'tinggi':
-            self.declare(Advice('terlebih hidangan'))
+            self.declare(Advice('Terlebih hidangan.'))
         if rt == 'normal':
-            self.declare(Advice('hidangan yang diambil memuaskan'))
+            self.declare(Advice('Hidangan yang diambil memuaskan.'))
         self.declare(Action('check serving count'))
 
+    # This rule will specify what type of food class that the user should increase or decreaase based on their meal taken
     @Rule(Action('check serving count'))
     def check_serving_count(self):
         print('-----------------------------------------')
@@ -275,17 +293,18 @@ class DMES(KnowledgeEngine):
             count1 = counter_list1[item]
             if count2 < count1:
                 count3 = count1 - count2
-                self.declare(Advice(f"{'tambahkan hidangan ber'}{item}{' sebanyak '}{count3}{' hidangan.'}"))
+                self.declare(Advice(f"{'Tambahkan hidangan ber'}{item}{' sebanyak '}{count3}{' hidangan.'}"))
                 print(f"Item {item}: List1={count1}, List2={count2}")
             elif count2 > count1:
                 count3 = count2 - count1
-                self.declare(Advice(f"{'kurangkan hidangan ber'}{item}{' sebanyak '}{count3}{' hidangan.'}"))
+                self.declare(Advice(f"{'Kurangkan hidangan ber'}{item}{' sebanyak '}{count3}{' hidangan.'}"))
                 print(f"Item {item}: List1={count1}, List2={count2}")
             else:
-                self.declare(Advice(f"{item}{' mengikut pecahan hidangan'}"))
+                self.declare(Advice(f"{item}{' mengikut pecahan hidangan.'}"))
                 print(f"Item {item}: List1={count1}, List2={count2}")
         self.declare(Action('check_unavailable_serving'))
 
+    # This rule will check the mnissing food class in the user meal taken list, and add advises as part of the final output
     @Rule(Action('check_unavailable_serving'))
     def check_unavailable_serving(self):
         kkm_recommendation = ['karbohidrat', 'protein', 'serat', 'serat']
@@ -296,11 +315,11 @@ class DMES(KnowledgeEngine):
         print('missing items: ', missing_items)
         for i in list(missing_items):
             if i == 'karbohidrat':
-                self.declare(Advice('tambah 1 hidangan karbohidrat'))
+                self.declare(Advice('Tambah 1 hidangan karbohidrat.'))
             elif i == 'protein':
-                self.declare(Advice('tambah 1 hidangan protein'))
+                self.declare(Advice('Tambah 1 hidangan protein.'))
             elif i == 'serat':
-                self.declare(Advice('tambah 2 hidangan serat'))
+                self.declare(Advice('Tambah 2 hidangan serat.'))
             else:
                 pass
         self.declare(Action('find next meal'))
@@ -318,6 +337,7 @@ class DMES(KnowledgeEngine):
             self.declare(Fact(next_meal='sarapan'))
         self.declare(Action('recommended meal'))
 
+    # This rule will fetch recommended meals for user's next meal 
     @Rule(Action('recommended meal'),
           Fact(next_meal=MATCH.nm))
     def recommended_meal(self, nm):
@@ -345,11 +365,22 @@ class DMES(KnowledgeEngine):
             self.meal_recommendation.append("(Makan malam): " + random_line)
         self.declare(Action('give reasons'))
 
+    # This rule append all advices and outputs from Rules before, to be used in UI implementation
     @Rule(Action('give reasons'),
           Advice(MATCH.reason))
     def give_reasons(self, reason):
         self.reasoning.append(reason)
         print(reason)
+        self.declare(Action('clear list'))
+
+    @Rule(Action('clear list'))
+    def clear_list(self):
+        self.my_list.clear
+        self.serving_type_list.clear
+        self.bgl_reading.clear
+        self.kkm_checker.clear
+        self.meal_recommendation.clear
+        self.reasoning.clear
 
 engine = DMES()
 engine.reset()

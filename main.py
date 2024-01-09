@@ -4,6 +4,8 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.core.window import Window
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.datatables import MDDataTable
+from kivy.metrics import dp
+
 
 from helpers import screen_helper
 
@@ -29,60 +31,48 @@ class LoginScreen(Screen):
 class SignUpScreen(Screen):
     pass
 
+class IntroScreen1(Screen):
+    pass
+
+class IntroScreen2(Screen):
+    pass
+
+class IntroScreen3(Screen):
+    pass
 
 class MainScreen(Screen):
     pass
 
+class CarbScreen(Screen):
+    def on_pre_enter(self, *args):
+        # This method is called just before the screen is displayed
+        self.add_datatable()
 
-class TableScreen(Screen):
-    def on_enter(self, *args):
-        self.load_data_from_database()
+    def add_datatable(self):
+        # Sample data for demonstration
+        data = [
+            ("John Doe", "25", "Male"),
+            ("Jane Smith", "30", "Female"),
+            ("Bob Johnson", "22", "Male"),
+            # Add more rows as needed
+        ]
 
-    def load_data_from_database(self):
-        data = db.retrieve_data_from_database()
+        # Column names for the table
+        column_names = ["Name", "Age", "Gender"]
 
-        table = MDDataTable(
-            size_hint=(1, 0.8),
+        # Create an instance of MDDataTable
+        datatable = MDDataTable(
+            size_hint=(0.9, 0.9),
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             column_data=[
-                ("entry_date", 30),
-                ("reading_type", 30),
-                ("bgl_reading", 30),
-                ("meal_taken", 30),
+                (col_name, dp(30)) for col_name in column_names
             ],
+            row_data=data
         )
 
-        columns_to_retrieve = ["entry_date", "reading_type", "bgl_reading", "meal_taken"]
-
-        for row in data:
-            table_row = [""] * len(table.column_data)
-            print('table.column_data: ', table.column_data)
-            print('table_row: ', table_row)
-            print('reached checkpoint 1')
-            for column_name in columns_to_retrieve:
-                print('lol')
-                column_index = None
-                for i, (col_name, _) in enumerate(table.column_data):
-                    print('col_name: ', col_name)
-                    print('column_name: ', column_name)
-                    if col_name == column_name:
-                        print("finally!! i = ", i)
-                        column_index = i
-                        break
-
-                print('ccolumn_index: ', column_index)
-
-            print('reached checkpoint 5')
-            table.row_data.append(table_row)
-
-        table.bind(on_row_press=self.on_row_press)
-
-        self.ids.table_layout.clear_widgets()
-        self.ids.table_layout.add_widget(table)
-
-    def on_row_press(self, instance_row):
-        print("Selected row data:", instance_row)
-
+        # Add the MDDataTable to the layout of the CarbScreen
+        self.add_widget(datatable)
+    # pass
 
 class ReadingTypeScreen(Screen):
     pass
@@ -99,6 +89,11 @@ class AskMealTakenScreen(Screen):
 class OutputScreen(Screen):
     pass
 
+class OutputScreen2(Screen):
+    pass
+
+class OutputScreen3(Screen):
+    pass
 
 class User(Fact):
     pass
@@ -108,12 +103,16 @@ sm = ScreenManager()
 sm.add_widget(MenuScreen(name='menu'))
 sm.add_widget(LoginScreen(name='login'))
 sm.add_widget(SignUpScreen(name='signup'))
+sm.add_widget(IntroScreen1(name='intro1'))
+sm.add_widget(IntroScreen2(name='intro2'))
+sm.add_widget(IntroScreen3(name='intro3'))
 sm.add_widget(MainScreen(name='main'))
-sm.add_widget(TableScreen(name='table'))
+sm.add_widget(CarbScreen(name='carb_exchange'))
 sm.add_widget(ReadingTypeScreen(name='reading_type'))
 sm.add_widget(AskBGLScreen(name='ask_bgl'))
 sm.add_widget(OutputScreen(name='output'))
-
+sm.add_widget(OutputScreen2(name='output2'))
+sm.add_widget(OutputScreen3(name='output3'))
 
 class DemoApp(MDApp):
 
@@ -150,8 +149,9 @@ class DemoApp(MDApp):
             try:
                 print('username: ', username.text)
                 app = MDApp.get_running_app()
-                app.root.current = 'main'
-                print('successfully redirect to main screen')
+                app.root.current = 'intro1'
+                # app.root.current = 'main'
+                print('successfully redirect to intro1 screen')
 
                 bgl_reading = db.get_last_entry("bgl_reading")
                 entry_date = db.get_last_entry("entry_date")
@@ -184,11 +184,12 @@ class DemoApp(MDApp):
         es.run()
 
         output_screen = self.root.get_screen("output")
+        output_screen2 = self.root.get_screen("output2")
 
         result_label0 = output_screen.ids.result_label0
         result_label1 = output_screen.ids.result_label1
         result_label2 = output_screen.ids.result_label2
-        result_label3 = output_screen.ids.result_label3
+        result_label3 = output_screen2.ids.result_label3
 
         result_label0.text = ""
         result_label1.text = ""
@@ -216,14 +217,10 @@ class DemoApp(MDApp):
         print("entry_date: ", entry_date)
         main_screen = self.root.get_screen("main")
         if bgl_reading is not None:
-            main_screen.ids.data_label.text = str(bgl_reading)
-            main_screen.ids.data_label_2.text = str(entry_date)
+            # main_screen.ids.data_label.text = str(bgl_reading)
+            main_screen.ids.data_label_2.text = str(entry_date) 
         else:
             main_screen.ids.data_label.text = "0"
-
-    def show_table_screen(self):
-        table_screen = TableScreen(name='table')
-        self.root.get_screen('main').manager.current = 'table'
 
     def switch_theme_style(self):
         self.theme_cls.primary_palette = (
