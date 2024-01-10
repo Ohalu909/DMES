@@ -5,6 +5,7 @@ from kivy.core.window import Window
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
+import pandas as pd
 
 
 from helpers import screen_helper
@@ -43,37 +44,36 @@ class IntroScreen3(Screen):
 class MainScreen(Screen):
     pass
 
-class CarbScreen(Screen):
+class CarbScreen1(Screen):
+    # Reference for information in this screen:
+    # Muiz. (2017, April 18). Pengiraan karbohidrat untuk pesakit diabetes - PENDIDIKAN PESAKIT. PENDIDIKAN PESAKIT. http://pendidikanpesakit.myhealth.gov.my/pengiraan-karbohidrat-bagi-pesakit-diabetes/
+    pass
+
+class CarbScreen2(Screen):
     def on_pre_enter(self, *args):
-        # This method is called just before the screen is displayed
         self.add_datatable()
 
     def add_datatable(self):
-        # Sample data for demonstration
-        data = [
-            ("John Doe", "25", "Male"),
-            ("Jane Smith", "30", "Female"),
-            ("Bob Johnson", "22", "Male"),
-            # Add more rows as needed
-        ]
+        try:
+            excel_file_path = r"C:\Users\Afifah Abdul Halim\DMES\carbo_exchange.xlsx"
+            df = pd.read_excel(excel_file_path, sheet_name="Sheet1")
 
-        # Column names for the table
-        column_names = ["Name", "Age", "Gender"]
+            column_names = df.columns.tolist()
+            data = df.values.tolist()
 
-        # Create an instance of MDDataTable
-        datatable = MDDataTable(
-            size_hint=(0.9, 0.9),
-            pos_hint={'center_x': 0.5, 'center_y': 0.5},
-            column_data=[
-                (col_name, dp(30)) for col_name in column_names
-            ],
-            row_data=data
-        )
+            datatable = MDDataTable(
+                size_hint=(0.9, 0.5),
+                pos_hint={'center_x': 0.5, 'center_y': 0.5},
+                column_data=[
+                    (col_name, dp(30)) for col_name in column_names
+                ],
+                row_data=data
+            )
 
-        # Add the MDDataTable to the layout of the CarbScreen
-        self.add_widget(datatable)
-    # pass
-
+            self.add_widget(datatable)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        
 class ReadingTypeScreen(Screen):
     pass
 
@@ -107,7 +107,8 @@ sm.add_widget(IntroScreen1(name='intro1'))
 sm.add_widget(IntroScreen2(name='intro2'))
 sm.add_widget(IntroScreen3(name='intro3'))
 sm.add_widget(MainScreen(name='main'))
-sm.add_widget(CarbScreen(name='carb_exchange'))
+sm.add_widget(CarbScreen1(name='carb_intro'))
+sm.add_widget(CarbScreen2(name='carb_exchange'))
 sm.add_widget(ReadingTypeScreen(name='reading_type'))
 sm.add_widget(AskBGLScreen(name='ask_bgl'))
 sm.add_widget(OutputScreen(name='output'))

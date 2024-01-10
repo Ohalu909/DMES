@@ -7,7 +7,8 @@ ScreenManager:
     IntroScreen2:
     IntroScreen3:
     MainScreen:
-    CarbScreen:
+    CarbScreen1:
+    CarbScreen2:
     ReadingTypeScreen:
     AskBGLScreen:
     AskMealTakenScreen:
@@ -276,25 +277,70 @@ ScreenManager:
         text: 'Pertukaran Karbohidrat'
         size_hint: (0.6, 0.05)
         pos_hint: {'center_x':0.5, 'center_y':0.3}
-        on_press: root.manager.current = 'carb_exchange'
-    # MDRaisedButton:
-    #     text: 'Log'
-    #     size_hint: (0.6, 0.05)
-    #     pos_hint: {'center_x':0.5, 'center_y':0.3}
-    #     on_press: 
-    #         root.manager.current = 'table'
-    #         app.show_table_screen()
+        on_press: root.manager.current = 'carb_intro'
     MDRectangleFlatButton:
         text: 'Keluar'
         pos_hint: {'center_x':0.5, 'center_y':0.2}
         on_press: root.manager.current = 'menu'
-        
-<CarbScreen>:
-    name: 'carb_exchange'
+
+<CarbScreen1>
+    name: 'carb_intro'
+    MDLabel: 
+        text: 'Berapa banyak karbohidrat yang anda perlukan?'
+        font_style: "H6"
+        halign: "center"
+        pos_hint: {'center_x':0.58, 'center_y':0.85}
+        elevation: 10
+        color: "grey"
+    MDLabel:
+        text: 'Secara umumnya, perempuan memerlukan 3 hingga 4 unit karbohidrat manakala lelaki memerlukan 4 hingga 5 unit karbohidrat untuk setiap hidangan utama dan 1 hingga 2 unit karbohidrat untuk hidangan snek. Keperluan ini bergantung juga kepada tahap aktiviti fizikal anda.'
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.6}
+        theme_text_color: "Custom"
+        text_color: "blue"
+    MDRaisedButton:
+        text: 'Seterusnya'
+        pos_hint: {'center_x':0.5, 'center_y':0.3}
+        on_press: root.manager.current = 'carb_exchange'
     MDRectangleFlatButton:
         text: 'Kembali'
         pos_hint: {'center_x':0.5, 'center_y':0.2}
         on_press: root.manager.current = 'main'
+
+<CarbScreen2>:
+    name: 'carb_exchange'
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(10)
+        MDLabel:
+            text: 'Pertukaran Karbohidrat'
+            theme_text_color: "Primary"
+            halign: 'center'
+            font_style: 'H6'
+            size_hint_y: None
+            height: dp(56)
+        MDLabel:
+            text: 'Senarai makanan untuk 1 unit karbohidrat:'
+            theme_text_color: "Secondary"
+            halign: 'center'
+            size_hint_y: None
+            height: dp(24)
+        ScrollView:
+            size_hint: (1, 1)
+            GridLayout:
+                id: carb_grid
+                cols: 4 
+                spacing: dp(10)
+                padding: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+        MDRectangleFlatButton:
+            text: 'Kembali'
+            size_hint_y: None
+            height: dp(48)
+            pos_hint: {'center_x':0.5, 'center_y':0.4}
+            on_press: root.manager.current = 'main'
                      
 <ReadingTypeScreen>:
     name: 'reading_type'
