@@ -339,7 +339,7 @@ class DMES(KnowledgeEngine):
 
     # This rule will fetch recommended meals for user's next meal 
     # Reference for meal recommendation:
-    # Kementerian Kesihatan Malaysia . Portal Rasmi Kementerian Kesihatan Malaysia. (n.d.). https://moh.gov.my/index.php/pages/view/1905 
+    # Kementerian Kesihatan Malaysia . Portal Rasmi Kementerian Kesihatan Malaysia. (n.d.). https://moh.gov.my/index.php/pages/view/1905  
     @Rule(Action('recommended meal'),
           Fact(next_meal=MATCH.nm))
     def recommended_meal(self, nm):

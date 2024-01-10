@@ -215,11 +215,11 @@ class DemoApp(MDApp):
         bgl_reading = db.get_last_entry("bgl_reading")
         # entry_date = db.get_second_last_entry("entry_date")
         entry_date = db.get_secondary_column("bgl_reading", "entry_date")
-        print("entry_date: ", entry_date)
+        print("entry_date: ", entry_date[1])
         main_screen = self.root.get_screen("main")
         if bgl_reading is not None:
             # main_screen.ids.data_label.text = str(bgl_reading)
-            main_screen.ids.data_label_2.text = str(entry_date) 
+            main_screen.ids.data_label_2.text = str(entry_date[1]) 
         else:
             main_screen.ids.data_label.text = "0"
 
