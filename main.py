@@ -55,7 +55,7 @@ class CarbScreen2(Screen):
 
     def add_datatable(self):
         try:
-            excel_file_path = r"C:\Users\Afifah Abdul Halim\DMES\carbo_exchange.xlsx"
+            excel_file_path = "carbo_exchange.xlsx"
             df = pd.read_excel(excel_file_path, sheet_name="Sheet1")
 
             column_names = df.columns.tolist()

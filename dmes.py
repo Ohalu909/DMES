@@ -58,6 +58,12 @@ class DMES(KnowledgeEngine):
         yield Fact(action="greet")
 
         # Menu is a Fact that holds the information about the meal taken and its class in the food pyramid
+        excel_file_path = "carbo_exchange.xlsx"
+        df = pd.read_excel(excel_file_path, sheet_name="Sheet2")
+
+        for index, row in df.iterrows():
+            yield Menu(menu=row['menu'], menu_class=row['menu_class'])
+
         # yield Menu(menu='q', menu_class='q')
         # yield Menu(menu='roti', menu_class='karbohidrat')
         # yield Menu(menu='nasi putih', menu_class='karbohidrat')
@@ -166,13 +172,7 @@ class DMES(KnowledgeEngine):
         # yield Menu(menu='teh o limau ais', menu_class='minuman bergula')
         # yield Menu(menu='milo ais', menu_class='minuman bergula')
 
-        # Read the Excel file into a pandas DataFrame
-        df = pd.read_excel("carbo_exchange.xlsx")
-
-        # Iterate over the rows and generate facts
-        for index, row in df.iterrows():
-            yield Menu(menu=row['menu'], menu_class=row['menu_class'])
-
+        
     # This is how the Rules are being created
     # It will have the @Rule tag to specify it as a Rule
     # We will specify the premises as the arguments for Rule
