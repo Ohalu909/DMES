@@ -483,9 +483,8 @@ ScreenManager:
                 # size_hint_y: None
                 pos_hint: {'center_x':0.5, 'center_y':0.1}
                 on_press: 
-                    app.update_main_card()
+                    # app.update_main_card()
                     root.manager.current = 'output2'  
-                    # output_grid.clear_widgets()
 
 <OutputScreen2>
     name: 'output2'
@@ -549,5 +548,6 @@ ScreenManager:
         text: 'Keluar'
         pos_hint: {'center_x':0.5, 'center_y':0.2}
         on_press: 
+            app.update_main_card()
             root.manager.current = 'main'
 """

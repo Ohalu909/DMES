@@ -51,6 +51,15 @@ class DMES(KnowledgeEngine):
         self.kkm_checker = []
         self.meal_recommendation = []
         self.reasoning = []
+        self.missing_meal = []
+
+        # self.my_list.clear()
+        # self.serving_type_list.clear()
+        # self.bgl_reading.clear()
+        # self.kkm_checker.clear()
+        # self.meal_recommendation.clear()
+        # self.reasoning.clear()
+        # self.missing_meal.clear()
 
     # This is the knowledge base that contains all the Facts
     @DefFacts() 
@@ -190,11 +199,21 @@ class DMES(KnowledgeEngine):
         self.declare(Fact(type=last_reading_type.lower()))
         self.declare(Fact(reading=last_bgl_reading))
         self.declare(User(meal_taken='q'))
-        value_list = last_meal_taken.split(',')
+        value_list = last_meal_taken.split(', ')
         for i in value_list:
             self.declare(User(meal_taken=i))
             self.my_list.append(i)
-
+        
+        excel_file_path = "carbo_exchange.xlsx"
+        df = pd.read_excel(excel_file_path, sheet_name="Sheet2")
+        for value in self.my_list:
+            if value not in df.iloc[:, 0].values:
+                self.missing_meal.append(value)
+        if not self.missing_meal:
+            print("All values exist in the first column.")
+        else:
+            print("MISSING VALUES:", self.missing_meal)
+        print("MISSING VALUES:", self.missing_meal)
         print('-----Diabetic Monitoring Expert System-----')
 
     # This rule check the reading type of the patient's blood glucose level
@@ -227,12 +246,30 @@ class DMES(KnowledgeEngine):
           AS.f2 << User(meal_taken=MATCH.mta),
           Menu(menu=MATCH.mta,
                menu_class=MATCH.mc))
-    def serving_type(self, mc):
+    def serving_type(self, mc, mta):
         print('serving type = ', mc)
+        print('menu taken = ', mta)
         if mc == 'q':
             self.declare(Action('count_serving_type'))
         else:
             self.serving_type_list.append(mc)
+        
+        # try:
+        #     df = pd.read_excel('carbo_exchange.xlsx', 'Sheet2')
+
+        #     if mta not in df.iloc[:, 0].values:
+        #         self.missing_meal.append(mta)
+        #         raise Exception(f"Meal '{mta}' not found in the Excel file.")
+        #     else:
+        #         print(mta, ' exist in Excel')
+        #         if mc == 'q':
+        #             self.declare(Action('count_serving_type'))
+        #         else:
+        #             # self.serving_type_list.append(mc)
+        #             pass
+
+        # except Exception as e:
+        #     print(f"Error: {e}")
 
     # This Rule will count the occurence of the type of class to check with the KKM recommendation
     @Rule(Action('count_serving_type'))
@@ -382,16 +419,17 @@ class DMES(KnowledgeEngine):
     def give_reasons(self, reason):
         self.reasoning.append(reason)
         print(reason)
-        self.declare(Action('clear list'))
+    #     self.declare(Action('clear list'))
 
-    @Rule(Action('clear list'))
-    def clear_list(self):
-        self.my_list.clear
-        self.serving_type_list.clear
-        self.bgl_reading.clear
-        self.kkm_checker.clear
-        self.meal_recommendation.clear
-        self.reasoning.clear
+    # @Rule(Action('clear list'))
+    # def clear_list(self):
+    #     self.my_list.clear()
+    #     self.serving_type_list.clear()
+    #     self.bgl_reading.clear()
+    #     self.kkm_checker.clear()
+    #     self.meal_recommendation.clear()
+    #     self.reasoning.clear()
+    #     self.missing_meal.clear()
 
 engine = DMES()
 engine.reset()

@@ -207,21 +207,39 @@ class DemoApp(MDApp):
         es.meal_recommendation.clear()
         es.reasoning.clear()
 
+        if es.missing_meal:
+            snackbar_message = f"Ada hidangan tidak terdapat dalam senarai."
+
+            snackbar = Snackbar(text = snackbar_message)
+            snackbar.open()
+
         current_screen = self.root.current
         if current_screen != 'output':
             self.root.current = 'output'
 
     def update_main_card(self):
-        bgl_reading = db.get_last_entry("bgl_reading")
-        # entry_date = db.get_second_last_entry("entry_date")
-        entry_date = db.get_secondary_column("bgl_reading", "entry_date")
-        print("entry_date: ", entry_date[1])
-        main_screen = self.root.get_screen("main")
-        if bgl_reading is not None:
-            # main_screen.ids.data_label.text = str(bgl_reading)
-            main_screen.ids.data_label_2.text = str(entry_date[1]) 
-        else:
-            main_screen.ids.data_label.text = "0"
+        # bgl_reading = db.get_last_entry("bgl_reading")
+        # # entry_date = db.get_second_last_entry("entry_date")
+        # entry_date = db.get_secondary_column("bgl_reading", "entry_date")
+        # print("entry_date: ", entry_date)
+        # main_screen = self.root.get_screen("main")
+        # if bgl_reading is not None:
+        #     # main_screen.ids.data_label.text = str(bgl_reading)
+        #     main_screen.ids.data_label_2.text = str(entry_date[1]) 
+        # else:
+        #     main_screen.ids.data_label.text = "0"
+        try:
+            bgl_reading = db.get_last_entry("bgl_reading")
+            entry_date = db.get_secondary_column("bgl_reading", "entry_date")
+            print("entry_date:", entry_date)
+            main_screen = self.root.get_screen("main")
+            if bgl_reading is not None:
+                main_screen.ids.data_label.text = str(bgl_reading)
+                main_screen.ids.data_label_2.text = str(entry_date[1])
+            else:
+                main_screen.ids.data_label.text = "0"
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def switch_theme_style(self):
         self.theme_cls.primary_palette = (
