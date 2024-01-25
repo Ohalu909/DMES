@@ -286,10 +286,17 @@ ScreenManager:
 <CarbScreen1>
     name: 'carb_intro'
     MDLabel: 
-        text: 'Berapa banyak karbohidrat yang anda perlukan?'
+        text: 'Berapa banyak karbohidrat'
         font_style: "H6"
         halign: "center"
-        pos_hint: {'center_x':0.58, 'center_y':0.85}
+        pos_hint: {'center_x':0.5, 'center_y':0.85}
+        elevation: 10
+        color: "grey"
+    MDLabel: 
+        text: 'yang anda perlukan?'
+        font_style: "H6"
+        halign: "center"
+        pos_hint: {'center_x':0.5, 'center_y':0.8}
         elevation: 10
         color: "grey"
     MDLabel:
@@ -497,7 +504,7 @@ ScreenManager:
         text: 'Walaupun anda dibenarkan untuk menikmati makanan dan minuman manis dalam diet seharian, anda perlu ingat bahawa pengambilan utama karbohidrat sepatutnya datang daripada sumber buah, sayur, bijirin, susu rendah lemak dan yogurt.'
         halign: "center"
         font_style: "Caption"
-        pos_hint: {'center_x':0.5, 'center_y':0.5}
+        pos_hint: {'center_x':0.5, 'center_y':0.45}
         theme_text_color: "Custom"
         text_color: "blue"
     MDLabel: 
